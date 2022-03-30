@@ -1,0 +1,182 @@
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Password Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'main.js' %}" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="brand"><a href=""><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;Password Manager</a></div>
+            <ul>
+                <li><a href="">Home</a></li>
+                {% if request.user.is_anonymous %}
+                <li><a href="javascript:;" onclick="displayModal('anmeldung-modal');">Anmelden</a></li>
+                <li><a href="javascript:;" onclick="displayModal('registrierung-modal');">Registrieren</a></li>
+                {% else %}
+                <li><a href="javascript:;" onclick="document.getElementById('abmelden-btn').click();">Abmelden</a></li>
+                <form hidden="true" action="." method="POST">
+                    {% csrf_token %}
+                    <input type="submit" id="abmelden-btn" name="Abmelden">
+                </form>
+
+                
+                <li><a href="javascript:;" onclick="displayModal('kennwort-hinzufügen-modal');">Hinzufügen</a></li>
+                <li><a href="javascript:;" onclick="displayModal('kennwortgenerator-modal');">Kennwortgenerator</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <!--Datstellung der Mitteilungen-->
+    {% if messages %}
+        <div class="messages" style="text-align: center;">
+            {% for message in messages %}
+                <p>
+                    {% if message.tags == "error" %}
+                        <i class="fa fa-exclamation" aria-hidden="true"></i>
+                        {% else %}
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                    {% endif %}
+                    &nbsp;{{message}}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!--Emailsbestätigung-->
+        {% if code %}
+            <div style="text-align: center;">
+                <form action="." method="POST" role="form">
+                    {% csrf_token %}
+                    <h2>Bestätigen Sie Ihre E-Mail Adresse.</h2>
+                    <p>Überprüfen Sie Ihre E-Mails und erhalten Sie den Code.</p2>
+                    <input type="text" name="code" placeholder="Geben Sie den 6-stelligen Code ein .....">
+                    <input type="text" hidden="true" name="user" value="{{user.username}}">
+                    <input type="submit" value="Bestätigen" name="Bestätigen">
+                </form>
+
+            </div>
+        {% endif %}
+        
+
+
+
+
+    <!--Modals-->
+    <div class="modals-wrapper">
+        <span id="close-modal" title="schließen"><i class="fa fa-times" aria-hidden="true"></i></span>
+        <!--anmeldung modal-->
+        <div class="modal" id="anmeldung-modal">
+            <form action="." role="form" method="POST">
+                {% csrf_token %}
+                <h2>Anmelden</h2>
+                <input type="text" name="username" placeholder="Benutzername">
+                <input type="password" name="password" placeholder="password">
+                <input type="submit" value="anmelden" name="anmeldung-form">
+                <p><a href="{% url "password_reset" %}">Forgotten your password?</a></p>
+            </form>
+            
+        </div>
+
+        <!--registrierung modal-->
+        <div class="modal" id="registrierung-modal">
+            <form action="." role="form" method="POST">
+                {% csrf_token %}
+                <h2>Registrieren</h2>
+                <input type="text" name="username" placeholder="Benutzername">
+                <input type="email" name="email" placeholder="email">
+                
+                <input type="password" name="password" placeholder="password">
+                <input type="password" name="password2" placeholder="Ihre Email Adresse bestätigen">
+                <input type="submit" value="register" name="registrierung-form">
+            </form>
+        </div>
+
+        <!--kennwort-hinzufügen modal-->
+        <div class="modal" id="kennwort-hinzufügen-modal">
+            <form action="." role="form" method="POST">
+                {% csrf_token %}
+                <h2>Neues Passwort hinzufügen</h2>
+                <input type="text" name="url" placeholder="URL der Website">
+                <input type="email" name="email" placeholder="email">      
+                <input type="password" name="password" placeholder="password">
+                <input type="submit" value="save" name="kennwort-hinzufügen">
+                
+            </form>
+        </div>
+
+        <!--kennwortgenerator modal-->
+        <div class="modal" id="kennwortgenerator-modal">
+            <form action="{% url 'kennword' %}">
+                {% csrf_token %}
+                <h2>Generierung des Kennwworts</h2>
+                <br>
+                <h5>Großbuchstaben</h5>
+                <input type="checkbox" name="großbuchstaben">
+                <br>
+                <h5>Zahlen</h5>
+                <input type="checkbox" name="zahlen">
+                <br>
+                <h5>Sonderzeichen</h5>
+                <input type="checkbox" name="sonderzeichen">
+                <br>
+                <h5>Bitte geben Sie den Buchstabenanzahl</h5>
+                <select name="lange">
+                    <option value="6" selected="selected">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+
+                <br>
+                <input type="submit" value="Generiere des Kennworts">
+                
+            </form>
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <!--One card-->
+        {% for password in passwords %}
+        <div class="card">
+            <div class="actions">&nbsp;Actions <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                <a href="javascript:;" onclick="document.getElementById('löschen-btn{{password.id}}').click();" class="action-item">löschen</a>
+                <form hidden="true" action="." method="POST">
+                    {% csrf_token %}
+                    <input type="text" hidden="true" name="password-id" value="{{password.id}}">
+                    <input type="submit" id="löschen-btn{{password.id}}" name="löschen">
+                </form>
+                
+            </div>
+            <img width="50" height="50" src="{{password.logo}}" alt="">
+            <div class="name"> {{password.name}}</div>
+
+            <!-- password modal-->
+            <input type="email" name="email" value="{{password.email}}"><i class="fas fa-copy copy" title="Kopieren"></i>
+            <input type="password" name="username" value="{{password.password}}"><i class="fas fa-copy copy" title="Kopieren"></i>
+
+        </div>
+        {% endfor %}
+
+
+    </div>
+
+
+
+
+
+    <footer>
+        <a href="">Danke für Unterstützung</a>
+    </footer>
+    
+</body>
+</html>

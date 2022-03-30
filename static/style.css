@@ -1,0 +1,209 @@
+/*############# Gestaltung der Text #######""*/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ 
+:root{
+    --Farbe1: #171717;
+    --Farbe2: #c2224a;
+    --Farbe3: #EDEDED;
+    --Farbe4: #444444;
+    --Farbe5: rgba(255,255,255,0.1);
+    --Farbe6: #1a70b6;
+}
+
+html{
+    background-color: var(--Farbe3);
+    color: var(--FArbe3);
+    background-image: url('security.jpg'); 
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+a{
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--Farbe3);
+}
+
+a:hover{
+    color: var(--Farbe2);
+}
+
+input{
+    width: 70%;
+    margin: 10px auto;
+    padding: 5px;
+    border: none;
+}
+
+input:focus{
+    border: solid 1px var(--Farbe2);
+}
+
+/*########### header #######"*/
+
+header{
+    box-shadow: 0 10px 15px -3px var(--Farbe3);
+}
+
+header nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 30px;
+}
+
+header nav ul{
+    list-style-type: none;
+    display: inline-flex;
+}
+
+header nav ul li{
+    margin: 5px;
+}
+
+@media screen and (max-width: 640px) {
+    header nav{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .brand{
+        margin-bottom: 30px;
+    }
+}
+
+
+/*#########   footer #######"*/
+
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 10px 0 15px var(--Farbe4);
+}
+
+
+/*#########   modals #######"*/
+
+.modals-wrapper{
+    width: 100%;
+    height: 100%;
+    background-color: var(--Farbe3);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+}
+
+.modal{
+    background-color: var(--Farbe3);
+    min-width: 400px;
+    min-height: 400px;
+    padding: 60px;
+}
+
+#close-modal{
+    background-color: var(--Farbe2);
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#anmeldung-modal, #registrierung-modal, #kennwortgenerator-modal{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#password-modal, #kennwort-hinzufügen-modal{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.copy{
+    cursor: pointer;
+}
+
+
+/*#########   card #######"*/
+
+.container{
+    margin-top: 20px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+    margin-bottom: 80px;
+}
+
+.card{
+    background-color: var(--FArbe4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.actions{
+    margin: 5px;
+}
+
+.actions a{
+    display: none;
+    background-color: var(--Farbe2);
+    flex-direction: column;
+    padding: 5px;
+    align-items: center;
+}
+
+.actions:hover .action-item{
+    display: flex;
+}
+
+@media screen and (max-width: 680px) {
+    .container{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .container{
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* I added this later, didn't cover it in the tutorial*/
+
+.actions{
+    cursor: pointer;
+    border: solid 0.3px var(--Farbe2);
+    padding: 5px;
+}
+
+/*Change the size of the modal in the small devices*/
+@media screen and (max-width: 680px) {
+    .modal{
+        min-height: 300px;
+    }
+
+    .modals-wrapper{
+        max-height: 740px;
+    }
+}
